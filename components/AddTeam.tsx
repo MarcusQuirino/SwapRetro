@@ -32,7 +32,7 @@ export function AddTeam({handleClick}: {handleClick: (teamNames: string[]) => vo
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Team</Button>
+        <Button className="text-xl font-normal" size="lg">Add Team</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

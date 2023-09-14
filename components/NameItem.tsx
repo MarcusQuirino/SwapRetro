@@ -10,7 +10,7 @@ export function NameItem({
   return (
     <div className="flex flex-row w-full justify-between">
       {name}
-      <X className="h-4 w-4" onClick={() => removeItem(name)} color="red" />
+      <X className="h-4 w-4 cursor-pointer" onClick={() => removeItem(name)} color="red" />
     </div>
   );
 }
