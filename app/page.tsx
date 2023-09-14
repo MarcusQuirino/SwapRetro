@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="text-8xl text-foreground font-semibold">SwapRetro</h1>
         <IterationCw size={100} strokeWidth="3"/>
       </div>
-      <p className='text-2xl'>Make your retro. Meet your teamates</p>
+      <p className='text-2xl'>Make your retro. Meet your teammates</p>
       <Link href="/retro">
         <Button size="lg">Start Retro</Button>
       </Link>
