@@ -2,7 +2,7 @@ import { OpenAI } from 'langchain/llms/openai'
 
 export async function askQuestion() {
   const model = new OpenAI({
-    openAIApiKey: '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',
+    openAIApiKey: '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',
     temperature: 1,
     modelName: 'gpt-3.5-turbo',
   })
