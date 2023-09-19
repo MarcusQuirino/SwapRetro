@@ -4,7 +4,8 @@ import { AddTeam } from '@/components/AddTeam'
 import { ButtonLoading } from '@/components/ButtonLoading'
 import { NameTogle } from '@/components/NameTogle'
 import { Button } from '@/components/ui/button'
-import { getQuestion } from '@/lib/api'
+import { fetchQuestion } from '@/lib/action'
+import { askQuestion } from '@/lib/ai'
 import { useState } from 'react'
 
 export default function RetroPage() {
@@ -30,12 +31,12 @@ export default function RetroPage() {
   const handleClick = async () => {
     setLoading(true)
     try {
-      const data = await getQuestion()
+      const data = await fetchQuestion()
       setQuestion(data)
       setLoading(false)
       return
     } catch (error) {
-      setQuestion('Something went wrong')
+      setQuestion('Oops... Something went wrong, but dont worry, please try again')
       setLoading(false)
     }
   }
