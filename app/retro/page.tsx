@@ -4,23 +4,15 @@ import { AddTeam } from '@/components/AddTeam'
 import { ButtonLoading } from '@/components/ButtonLoading'
 import { NameTogle } from '@/components/NameTogle'
 import { Button } from '@/components/ui/button'
-import { fetchQuestion } from '@/lib/action'
-import { askQuestion } from '@/lib/ai'
+import { getQuestion } from '@/lib/action'
 import { useState } from 'react'
+import { shuffle } from '@/lib/utils'
 
 export default function RetroPage() {
   const [created, setCreated] = useState(false)
   const [team, setTeam] = useState<string[]>([])
   const [question, setQuestion] = useState('')
   const [loading, setLoading] = useState(false)
-
-  const shuffle = (array: string[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[array[i], array[j]] = [array[j], array[i]]
-    }
-    return array
-  }
 
   const togleCreate = (teamNames: string[]) => {
     setCreated(!created)
@@ -31,7 +23,7 @@ export default function RetroPage() {
   const handleClick = async () => {
     setLoading(true)
     try {
-      const data = await fetchQuestion()
+      const data = await getQuestion()
       setQuestion(data)
       setLoading(false)
       return
@@ -44,7 +36,7 @@ export default function RetroPage() {
   return (
     <div className='flex h-full w-full flex-col items-center p-24 space-y-10 container mx-auto'>
       <p className='text-4xl text-center text-foreground'>{question}</p>
-      {!created && team.length < 1 && <AddTeam handleClick={togleCreate} />}
+      {!created && team.length < 2 && <AddTeam handleClick={togleCreate} />}
       {created && !loading && (
         <Button
           size='lg'
