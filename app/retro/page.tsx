@@ -7,37 +7,69 @@ import { Button } from '@/components/ui/button'
 import { getQuestion } from '@/lib/action'
 import { useState } from 'react'
 import { shuffle } from '@/lib/utils'
+import { useCallback } from 'react'
+import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+import { Textarea } from '@/components/ui/textarea'
 
 export default function RetroPage() {
-  const [created, setCreated] = useState(false)
-  const [team, setTeam] = useState<string[]>([])
-  const [question, setQuestion] = useState('')
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()!
   const [loading, setLoading] = useState(false)
+  const [text, setText] = useState('')
+  const team = searchParams.get('team')?.split(',') || []
+  const question = searchParams.get('question') || ''
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams)
+      params.set(name, value)
+
+      return params.toString()
+    },
+    [searchParams],
+  )
 
   const togleCreate = (teamNames: string[]) => {
-    setCreated(!created)
     const randomized = shuffle(teamNames)
-    setTeam(prev => [...prev, ...randomized])
+    router.push(pathname + '?' + createQueryString('team', randomized.join(',')))
   }
 
   const handleClick = async () => {
     setLoading(true)
     try {
       const data = await getQuestion()
-      setQuestion(data)
       setLoading(false)
+      setText('')
+      router.push(pathname + '?' + createQueryString('question', data))
       return
     } catch (error) {
-      setQuestion('Oops... Something went wrong, but dont worry, please try again')
+      router.push(
+        pathname +
+          '?' +
+          createQueryString(
+            'question',
+            'Oops... Something went wrong, but dont worry, please try again',
+          ),
+      )
       setLoading(false)
     }
   }
 
   return (
-    <div className='flex h-full w-full flex-col items-center p-24 space-y-10 container mx-auto'>
-      <p className='text-4xl text-center text-foreground'>{question}</p>
-      {!created && team.length < 2 && <AddTeam handleClick={togleCreate} />}
-      {created && !loading && (
+    <div className='flex h-full w-full flex-col items-center p-24 space-y-8 container mx-auto'>
+      <h2 className='text-center text-xl'>Question of the day:</h2>
+      <Textarea
+        className='text-4xl text-cente outline-0 h-48'
+        placeholder={question}
+        value={text}
+        onChange={e => setText(e.target.value)}
+        onBlur={() => {
+          router.push(pathname + '?' + createQueryString('question', text))
+        }}
+      />
+      {team.length < 2 && <AddTeam handleClick={togleCreate} />}
+      {team.length > 2 && !loading && (
         <Button
           size='lg'
           onClick={handleClick}
@@ -46,8 +78,8 @@ export default function RetroPage() {
         </Button>
       )}
       {loading && <ButtonLoading />}
-      {created && team.length > 1 && (
-        <ul className='w-80 space-y-1'>
+      {team.length > 1 && (
+        <ul className='w-80 space-y-1 h-full overflow-y-scroll'>
           {team.map((m, key) => (
             <li key={key}>
               <NameTogle name={m} />

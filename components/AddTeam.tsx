@@ -48,7 +48,7 @@ export function AddTeam({ handleClick }: { handleClick: (teamNames: string[]) =>
         </DialogHeader>
         <div className='flex flex-col gap-4 py-4 w-full'>
           <div className='flex flex-col items-center gap-4 w-full'>
-            <ul className='w-full'>
+            <ul className='w-full max-h-96 overflow-y-scroll'>
               {names.map((name, key) => (
                 <li key={key}>
                   <Separator className='pb-2' />
@@ -74,7 +74,6 @@ export function AddTeam({ handleClick }: { handleClick: (teamNames: string[]) =>
               <Button
                 className='w-full'
                 onClick={clickHandler}
-                disabled={names.length < 2}
               >
                 add
               </Button>
@@ -86,6 +85,7 @@ export function AddTeam({ handleClick }: { handleClick: (teamNames: string[]) =>
             <Button
               type='submit'
               onClick={() => handleClick(names)}
+              disabled={names.length < 2}
             >
               Done
             </Button>
